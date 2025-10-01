@@ -1,5 +1,4 @@
 ﻿#include "Texture.h"
-#include "GLUtil.h"
 #include "Image.h"
 
 Texture::Texture(const Image& image)
@@ -30,4 +29,9 @@ void Texture::bind(GLenum textureUnit) const
 {
     glActiveTexture(textureUnit);
     glBindTexture(GL_TEXTURE_2D, m_texture);
+}
+
+glm::vec2 Texture::dimension() const
+{
+    return m_size;
 }

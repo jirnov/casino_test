@@ -9,11 +9,14 @@ public:
 
     void draw(const Camera* camera);
 
+    void setPosition(const glm::vec2& pos);
+
 private:
     TexturePtr m_texture;
     MeshPtr m_mesh;
     ShaderPtr m_shader;
 
-    glm::mat4 m_ndc2pix;
-    glm::mat4 m_translate;
+    // (-1, 1) -> (0, textureSize)
+    glm::mat4 m_ndc2pix{glm::identity<glm::mat4>()};
+    glm::mat4 m_transform{glm::identity<glm::mat4>()};
 };

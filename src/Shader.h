@@ -15,5 +15,5 @@ public:
     void setUniformMatrix4fv(const std::string& name, const glm::mat4& matrix) const;
 
 private:
-    GLuint m_program = 0;
+    GLuint m_program{0};
 };

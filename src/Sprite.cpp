@@ -3,8 +3,6 @@
 #include "Mesh.h"
 #include "Shader.h"
 #include "Texture.h"
-#include <glm/gtx/string_cast.hpp>
-#include <glm/gtx/transform.hpp>
 
 Sprite::Sprite(TexturePtr texture, MeshPtr mesh, ShaderPtr shader)
    : m_texture(std::move(texture))
@@ -13,8 +11,9 @@ Sprite::Sprite(TexturePtr texture, MeshPtr mesh, ShaderPtr shader)
 {
     // (-1, 1) -> (0, 1)
     auto ndc2screen = glm::scale(glm::vec3(0.5f)) * glm::translate(glm::vec3(1.0f));
-    // (0, 1) -> pixel size
-    auto scaleMat = glm::scale(glm::vec3(64, 64, 1));
+    m_ndc2pix = glm::scale(glm::vec3(m_texture->dimension(), 1)) * ndc2screen;
+
+    setPosition({});
 }
 
 void Sprite::draw(const Camera* camera)
@@ -28,19 +27,12 @@ void Sprite::draw(const Camera* camera)
 
     m_shader->setUniform1i("spriteTexture", 0);
     m_shader->setUniformMatrix4fv("projection", camera->getProjectionMatrix());
-
-    auto projection = camera->getProjectionMatrix();
-
-    // (-1, 1) -> (0, 1)
-    auto ndc2screen = glm::scale(glm::vec3(0.5f)) * glm::translate(glm::vec3(1.0f));
-    // (0, 1) -> pixel size
-    auto scaleMat = glm::scale(glm::vec3(64, 64, 1));
-    // move
-    auto translateMat = glm::translate(glm::vec3(50, 50, 0));
-
-    auto model = translateMat * scaleMat * ndc2screen;
-
-    m_shader->setUniformMatrix4fv("model", model);
+    m_shader->setUniformMatrix4fv("model", m_transform);
 
     m_mesh->draw();
+}
+
+void Sprite::setPosition(const glm::vec2& pos)
+{
+    m_transform = glm::translate(glm::vec3(pos, 0)) * m_ndc2pix;
 }

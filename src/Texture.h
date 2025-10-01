@@ -9,8 +9,9 @@ public:
     ~Texture();
 
     void bind(GLenum textureUnit = GL_TEXTURE0) const;
+    glm::vec2 dimension() const;
 
 private:
-    GLuint m_texture = 0;
-    glm::ivec2 m_size;
+    GLuint m_texture{0};
+    glm::uvec2 m_size;
 };

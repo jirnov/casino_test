@@ -8,6 +8,7 @@
 // clang-format on
 
 #include <glm/glm.hpp>
+#include <glm/gtx/transform.hpp>
 
 // Forward declaration
 class Application;
