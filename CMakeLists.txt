@@ -15,6 +15,7 @@ find_package(OpenGL REQUIRED)
 set(CASINO_SOURCES
     src/Application.cpp
     src/Camera.cpp
+    src/FPSMetrics.cpp
     src/Image.cpp
     src/main.cpp
     src/Mesh.cpp
@@ -28,6 +29,7 @@ set(CASINO_HEADERS
     src/Application.h
     src/Camera.h
     src/Forward.h
+    src/FPSMetrics.h
     src/Image.h
     src/Mesh.h
     src/Renderer.h

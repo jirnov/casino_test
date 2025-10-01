@@ -21,4 +21,5 @@ private:
     ShaderManagerUPtr m_shaderMgr;
     SpriteUPtr m_sprite;
     CameraPtr m_camera;
+    FPSMetricsUPtr m_metrics;
 };

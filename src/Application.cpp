@@ -1,5 +1,6 @@
 ﻿#include "Application.h"
 #include "Camera.h"
+#include "FPSMetrics.h"
 #include "Image.h"
 #include "Mesh.h"
 #include "ShaderManager.h"
@@ -13,6 +14,7 @@ Application* Application::m_instance = nullptr;
 Application::Application(int argc, char** argv)
    : m_prevInstance(m_instance)
    , m_camera{std::make_shared<Camera>()}
+   , m_metrics{std::make_unique<FPSMetrics>()}
 {
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);
@@ -45,6 +47,9 @@ Application::Application(int argc, char** argv)
     glutReshapeFunc([](int w, int h) {
         m_instance->setWindowSize(w, h);
     });
+    glutIdleFunc([]() {
+        glutPostRedisplay();
+    });
 
     auto image = Image::load("image1.png");
     auto texture = std::make_shared<Texture>(*image.get());
@@ -67,6 +72,8 @@ void Application::render()
     glDisable(GL_CULL_FACE);
 
     m_sprite->draw(m_camera.get());
+
+    m_metrics->render();
 
     glutSwapBuffers();
 }

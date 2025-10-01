@@ -13,6 +13,7 @@
 // Forward declaration
 class Application;
 class Camera;
+class FPSMetrics;
 class Image;
 class Mesh;
 class Renderer;
@@ -34,3 +35,5 @@ using SpriteUPtr = std::unique_ptr<Sprite>;
 using ImageUPtr = std::unique_ptr<Image>;
 
 using CameraPtr = std::shared_ptr<Camera>;
+
+using FPSMetricsUPtr = std::unique_ptr<FPSMetrics>;
