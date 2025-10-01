@@ -6,8 +6,6 @@
 #include "ShaderManager.h"
 #include "Sprite.h"
 #include "Texture.h"
-#include <functional>
-#include <sstream>
 
 Application* Application::m_instance = nullptr;
 
@@ -61,6 +59,7 @@ Application::~Application()
 {
     glutDisplayFunc(nullptr);
     glutReshapeFunc(nullptr);
+    glutIdleFunc(nullptr);
     m_instance = m_prevInstance;
 }
 
