@@ -6,6 +6,8 @@
 #include "ShaderManager.h"
 #include "Sprite.h"
 #include "Texture.h"
+#include "Wheel.h"
+#include <format>
 
 Application* Application::m_instance = nullptr;
 
@@ -29,7 +31,9 @@ Application::Application(int argc, char** argv)
 
     auto debugCallback = [](GLenum, GLenum type, GLuint, GLenum, GLsizei, const GLchar* message, const void*) {
         if (type == GL_DEBUG_TYPE_ERROR) {
-            std::cerr << "OpenGL error: " << message << std::endl;
+            auto info = std::format("OpenGL error: {}", message);
+            std::cerr << info << std::endl;
+            //throw std::runtime_error(info);
         }
     };
 
@@ -49,10 +53,18 @@ Application::Application(int argc, char** argv)
         glutPostRedisplay();
     });
 
-    auto image = Image::load("image1.png");
-    auto texture = std::make_shared<Texture>(*image.get());
+    TextureVector textures;
+    textures.reserve(7);
+    for (int i = 0; i < 7; ++i) {
+        auto name = std::format("image{}.png", i + 1);
+        ImageUPtr image = Image::load(name);
+        textures.push_back(std::make_shared<Texture>(*image.get()));
+    }
 
-    m_sprite = std::make_unique<Sprite>(texture, std::make_shared<Mesh>(), m_shaderMgr->getSpriteShader());
+    auto mesh = std::make_shared<Mesh>();
+    auto shader = m_shaderMgr->getSpriteShader();
+
+    m_wheel = std::make_unique<Wheel>(textures, mesh, shader);
 }
 
 Application::~Application()
@@ -70,7 +82,11 @@ void Application::render()
 
     glDisable(GL_CULL_FACE);
 
-    m_sprite->draw(m_camera.get());
+    //m_sprite->draw(m_camera.get());
+
+    m_wheel->update(std::chrono::milliseconds(16));
+
+    m_wheel->draw(*m_camera);
 
     m_metrics->render();
 

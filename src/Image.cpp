@@ -2,7 +2,7 @@
 #include <format>
 #include <stb_image.h>
 
-ImageUPtr Image::load(const char* fileName)
+ImageUPtr Image::load(const std::string& fileName)
 {
     int width = 0;
     int height = 0;
@@ -10,7 +10,7 @@ ImageUPtr Image::load(const char* fileName)
 
     //stbi_set_flip_vertically_on_load(true);
 
-    if (auto pixels = stbi_load(fileName, &width, &height, &numChannels, 0)) {
+    if (auto pixels = stbi_load(fileName.c_str(), &width, &height, &numChannels, 0)) {
         return ImageUPtr(new Image(pixels, width, height, numChannels));
     }
 

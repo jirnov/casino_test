@@ -25,6 +25,7 @@ void FPSMetrics::render()
     if (m_label.empty()) {
         return;
     }
+    glColor3f(1, 1, 1);
     glWindowPos2d(0, 0);
     glColor3f(0.0f, 0.0f, 1.0f);
     for (auto c : m_label) {

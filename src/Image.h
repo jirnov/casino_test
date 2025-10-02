@@ -5,7 +5,7 @@
 
 class Image {
 public:
-    static ImageUPtr load(const char* fileName);
+    static ImageUPtr load(const std::string& fileName);
 
     const std::uint8_t* pixels() const;
     size_t width() const;

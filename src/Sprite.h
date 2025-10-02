@@ -7,7 +7,7 @@ class Sprite {
 public:
     Sprite(TexturePtr texture, MeshPtr mesh, ShaderPtr shader);
 
-    void draw(const Camera* camera);
+    void draw(const Camera& camera);
 
     void setPosition(const glm::vec2& pos);
 

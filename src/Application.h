@@ -16,10 +16,10 @@ private:
     static Application* m_instance;
     Application* m_prevInstance = nullptr;
 
-    //RendererUPtr m_renderer;
-
     ShaderManagerUPtr m_shaderMgr;
     SpriteUPtr m_sprite;
     CameraPtr m_camera;
     FPSMetricsUPtr m_metrics;
+
+    WheelUPtr m_wheel;
 };
