@@ -7,7 +7,7 @@ public:
     Mesh();
     ~Mesh();
 
-    void draw() const;
+    void render() const;
 
 private:
     GLuint m_vertexArrayObject{0};

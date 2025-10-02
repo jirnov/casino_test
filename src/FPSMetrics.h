@@ -4,12 +4,13 @@
 
 class FPSMetrics {
 public:
+    void update(const Milliseconds& dt);
     void render();
 
 private:
-    void update();
+    void updateLabel(const Milliseconds& frameTime);
 
-    int m_frameCount{0};
-    int m_prevTime{0};
-    std::string m_label;
+    size_t m_frameCount{0};
+    Milliseconds m_totalFrameTime{Milliseconds::zero()};
+    std::string m_label{"Collecting"};
 };

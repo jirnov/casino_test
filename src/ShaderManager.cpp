@@ -26,9 +26,10 @@ ShaderManager::ShaderManager()
         out vec4 FragColor;
             
         uniform sampler2D spriteTexture;
+        uniform vec3 spriteColor;
             
         void main() {
-            FragColor = texture(spriteTexture, TexCoord);
+            FragColor = texture(spriteTexture, TexCoord) * vec4(spriteColor, 1.0);
         }
     )";
 

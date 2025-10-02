@@ -55,7 +55,7 @@ Mesh::~Mesh()
     glDeleteVertexArrays(1, &m_vertexArrayObject);
 }
 
-void Mesh::draw() const
+void Mesh::render() const
 {
     glBindVertexArray(m_vertexArrayObject);
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);

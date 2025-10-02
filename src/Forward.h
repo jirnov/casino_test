@@ -45,3 +45,5 @@ using CameraPtr = std::shared_ptr<Camera>;
 using FPSMetricsUPtr = std::unique_ptr<FPSMetrics>;
 
 using WheelUPtr = std::unique_ptr<Wheel>;
+
+using Milliseconds = std::chrono::milliseconds;

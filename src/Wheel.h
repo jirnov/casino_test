@@ -12,16 +12,11 @@ public:
 
     void draw(const Camera& camera);
 
-    void update(const std::chrono::milliseconds& dt);
+    void update(const Milliseconds& dt);
 
 private:
-    CellType cellByIndex(int index);
-
     std::unordered_map<CellType, SpriteUPtr> m_sprites;
 
     std::vector<CellType> m_cells;
     float m_cellIndex;
-
-    //    WheelModelUPtr m_model;
-    //WheelViewUPtr m_view;
 };

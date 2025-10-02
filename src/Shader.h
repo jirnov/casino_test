@@ -12,6 +12,7 @@ public:
     void use() const;
 
     void setUniform1i(const std::string& name, int value) const;
+    void setUniform3f(const std::string& name, const glm::vec3& color) const;
     void setUniformMatrix4fv(const std::string& name, const glm::mat4& matrix) const;
 
 private:

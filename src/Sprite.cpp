@@ -17,7 +17,7 @@ Sprite::Sprite(TexturePtr texture, MeshPtr mesh, ShaderPtr shader)
     setPosition({});
 }
 
-void Sprite::draw(const Camera& camera)
+void Sprite::render(const Camera& camera)
 {
     if (!m_shader || !m_texture || !m_mesh) {
         return;
@@ -27,13 +27,19 @@ void Sprite::draw(const Camera& camera)
     m_texture->bind(GL_TEXTURE0);
 
     m_shader->setUniform1i("spriteTexture", 0);
+    m_shader->setUniform3f("spriteColor", m_color);
     m_shader->setUniformMatrix4fv("projection", camera.getProjectionMatrix());
     m_shader->setUniformMatrix4fv("model", m_transform);
 
-    m_mesh->draw();
+    m_mesh->render();
 }
 
 void Sprite::setPosition(const glm::vec2& pos)
 {
     m_transform = glm::translate(glm::vec3(pos, 0)) * m_ndc2pix;
+}
+
+void Sprite::setColor(const glm::vec3& rgb)
+{
+    m_color = rgb;
 }

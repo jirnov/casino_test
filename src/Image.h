@@ -1,11 +1,12 @@
 ﻿#pragma once
 
 #include "Forward.h"
+#include <filesystem>
 #include <memory>
 
 class Image {
 public:
-    static ImageUPtr load(const std::string& fileName);
+    static ImageUPtr load(const std::filesystem::path& fileName);
 
     const std::uint8_t* pixels() const;
     size_t width() const;

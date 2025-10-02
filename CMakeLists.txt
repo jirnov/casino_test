@@ -23,7 +23,8 @@ set(CASINO_SOURCES
     src/Shader.cpp
     src/ShaderManager.cpp
     src/Sprite.cpp
-    src/Texture.cpp)
+    src/Texture.cpp
+    src/Wheel.cpp)
 
 set(CASINO_HEADERS
     src/Application.h
@@ -36,7 +37,8 @@ set(CASINO_HEADERS
     src/Shader.h
     src/ShaderManager.h
     src/Sprite.h
-    src/Texture.h)
+    src/Texture.h
+    src/Wheel.h)
 
 add_executable(${PROJECT_NAME} ${CASINO_HEADERS} ${CASINO_SOURCES})
 
