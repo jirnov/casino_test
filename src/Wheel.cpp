@@ -47,7 +47,7 @@ void Wheel::startSpin(const Milliseconds& duration)
     m_currentIndex = std::fmod(m_currentIndex, static_cast<float>(m_cells.size()));
 
     // Вычисляем будущий индекс от заданного времени как целое число
-    m_targetIndex = std::ceilf(m_currentIndex + CELLS_PER_MILLIS * duration.count());
+    m_targetIndex = ceilf(m_currentIndex + CELLS_PER_MILLIS * duration.count());
 
     auto totalCells = m_targetIndex - m_currentIndex;
 
