@@ -4,9 +4,7 @@
 
 class ShaderManager {
 public:
-    ShaderManager();
-
-    ShaderPtr getSpriteShader();
+    static ShaderPtr createSpriteShader();
 
 private:
     ShaderPtr m_spriteShader;

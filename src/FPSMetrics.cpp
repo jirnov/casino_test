@@ -7,7 +7,7 @@ void FPSMetrics::update(const Milliseconds& dt)
 
     m_totalFrameTime += dt;
 
-    if (m_totalFrameTime.count() > 1000) {
+    if (m_totalFrameTime > Seconds{1}) {
         updateLabel(m_totalFrameTime / m_frameCount);
         m_totalFrameTime = Milliseconds::zero();
         m_frameCount = 0;
@@ -16,15 +16,12 @@ void FPSMetrics::update(const Milliseconds& dt)
 
 void FPSMetrics::render()
 {
-    if (m_label.empty()) {
-        return;
-    }
-    glColor3f(0, 0, 0);
-    glRasterPos2d(0, 0);
+    glColor3f(1, 1, 1);
+    glRasterPos2f(0, 0);
     glWindowPos2d(0, 0);
-    for (auto c : m_label) {
-        glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, c);
-    }
+    glutBitmapString(GLUT_BITMAP_HELVETICA_18, reinterpret_cast<const unsigned char*>(m_label.c_str()));
+    // Есть подозрение, что правильно работать с текстом лучше через FreeType, на всякий случай вывожу в консоль
+    //    std::cout << m_label << '\n';
 }
 
 void FPSMetrics::updateLabel(const Milliseconds& frameTime)

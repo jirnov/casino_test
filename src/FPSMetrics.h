@@ -12,5 +12,5 @@ private:
 
     size_t m_frameCount{0};
     Milliseconds m_totalFrameTime{Milliseconds::zero()};
-    std::string m_label{"Collecting"};
+    std::string m_label{"Collecting..."};
 };

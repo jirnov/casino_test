@@ -17,6 +17,10 @@ Sprite::Sprite(TexturePtr texture, MeshPtr mesh, ShaderPtr shader)
     setPosition({});
 }
 
+Sprite::~Sprite()
+{
+}
+
 void Sprite::render(const Camera& camera)
 {
     if (!m_shader || !m_texture || !m_mesh) {
@@ -32,6 +36,9 @@ void Sprite::render(const Camera& camera)
     m_shader->setUniformMatrix4fv("model", m_transform);
 
     m_mesh->render();
+
+    //glDisable(GL_TEXTURE_2D);
+    glBindTexture(GL_TEXTURE_2D, 0);
 }
 
 void Sprite::setPosition(const glm::vec2& pos)

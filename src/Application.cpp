@@ -1,13 +1,9 @@
 ﻿#include "Application.h"
 #include "Camera.h"
 #include "FPSMetrics.h"
-#include "Image.h"
-#include "Mesh.h"
-#include "ShaderManager.h"
-#include "Sprite.h"
-#include "Texture.h"
-#include "Wheel.h"
-#include <format>
+#include "Game.h"
+#include "SpriteManager.h"
+//#include <format>
 
 constexpr int WINDOW_WIDTH = 800;
 constexpr int WINDOW_HEIGHT = 600;
@@ -44,27 +40,9 @@ Application::Application(int argc, char** argv)
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-    m_shaderMgr = std::make_unique<ShaderManager>();
+    m_spriteMgr = std::make_unique<SpriteManager>();
 
-    TextureVector textures;
-    textures.reserve(7);
-    for (int i = 0; i < 7; ++i) {
-        auto name = std::format("image{}.png", i + 1);
-        auto image = Image::load(name);
-        textures.push_back(std::make_shared<Texture>(*image));
-    }
-
-    auto mesh = std::make_shared<Mesh>();
-    auto shader = m_shaderMgr->getSpriteShader();
-
-    m_wheel = std::make_unique<Wheel>(textures, mesh, shader);
-
-    {
-        auto image = Image::load("foreground.png");
-        auto tex = std::make_shared<Texture>(*image);
-
-        m_foreground = std::make_unique<Sprite>(tex, mesh, shader);
-    }
+    m_game = std::make_unique<Game>(*m_spriteMgr);
 
     registerCallbacks();
 }
@@ -76,13 +54,12 @@ Application::~Application()
 
 void Application::render()
 {
-    glClearColor(0, 0, 0, 1);
-    glClear(GL_COLOR_BUFFER_BIT);
+    glClearColor(1, 0, 0, 0);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     glDisable(GL_CULL_FACE);
 
-    m_wheel->draw(*m_camera);
-    m_foreground->render(*m_camera);
+    m_game->render(*m_camera);
 
     m_metrics->render();
 
@@ -92,11 +69,12 @@ void Application::render()
 void Application::update()
 {
     auto curTime = Milliseconds{glutGet(GLUT_ELAPSED_TIME)};
-    auto deltaTime = curTime - m_prevTime;
+    auto dt = curTime - m_prevTime;
     m_prevTime = curTime;
 
-    m_wheel->update(deltaTime);
-    m_metrics->update(deltaTime);
+    m_game->update(dt);
+
+    m_metrics->update(dt);
 
     glutPostRedisplay();
 }
@@ -107,7 +85,15 @@ void Application::onKeyboard(unsigned char key)
         case 27:
             glutLeaveMainLoop();
             break;
+        default:
+            m_game->onKeyboard(key);
+            break;
     }
+}
+
+void Application::onMouse(int button, int state, int x, int y)
+{
+    m_game->onMouse(button, state, x, y);
 }
 
 void Application::timerFunc(int fps)
@@ -157,6 +143,12 @@ void Application::registerCallbacks()
             m_instance->onKeyboard(key);
         }
     });
+
+    glutMouseFunc([](int button, int state, int x, int y) {
+        if (m_instance) {
+            m_instance->onMouse(button, state, x, y);
+        }
+    });
 }
 
 void Application::unregisterCallbasks()
@@ -167,4 +159,5 @@ void Application::unregisterCallbasks()
     glutReshapeFunc(nullptr);
     glutTimerFunc(0, nullptr, 0);
     glutKeyboardFunc(nullptr);
+    glutMouseFunc(nullptr);
 }

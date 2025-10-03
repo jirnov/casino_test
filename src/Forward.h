@@ -14,24 +14,24 @@
 
 // Forward declaration
 class Application;
+class Button;
 class Camera;
 class FPSMetrics;
+class Game;
 class Image;
 class Mesh;
 class Renderer;
 class Shader;
 class Sprite;
+class SpriteManager;
 class Texture;
 class ShaderManager;
 class Wheel;
 
 using MeshPtr = std::shared_ptr<Mesh>;
 using TexturePtr = std::shared_ptr<Texture>;
-using TextureVector = std::vector<TexturePtr>;
 
 using ShaderPtr = std::shared_ptr<Shader>;
-
-//using RendererUPtr = std::unique_ptr<Renderer>;
 
 using ShaderManagerUPtr = std::unique_ptr<ShaderManager>;
 
@@ -47,3 +47,10 @@ using FPSMetricsUPtr = std::unique_ptr<FPSMetrics>;
 using WheelUPtr = std::unique_ptr<Wheel>;
 
 using Milliseconds = std::chrono::milliseconds;
+using Seconds = std::chrono::seconds;
+
+using GameUPtr = std::unique_ptr<Game>;
+
+using ButtonUPtr = std::unique_ptr<Button>;
+
+using SpriteManagerUPtr = std::unique_ptr<SpriteManager>;

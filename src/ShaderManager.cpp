@@ -1,7 +1,7 @@
 ﻿#include "ShaderManager.h"
 #include "Shader.h"
 
-ShaderManager::ShaderManager()
+ShaderPtr ShaderManager::createSpriteShader()
 {
     std::string vertexSource = R"(
         #version 330 core
@@ -33,10 +33,5 @@ ShaderManager::ShaderManager()
         }
     )";
 
-    m_spriteShader = std::make_unique<Shader>(vertexSource, fragmentSource);
-}
-
-ShaderPtr ShaderManager::getSpriteShader()
-{
-    return m_spriteShader;
+    return std::make_shared<Shader>(vertexSource, fragmentSource);
 }

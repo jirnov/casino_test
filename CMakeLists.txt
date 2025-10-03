@@ -14,8 +14,10 @@ find_package(OpenGL REQUIRED)
 
 set(CASINO_SOURCES
     src/Application.cpp
+    src/Button.cpp
     src/Camera.cpp
     src/FPSMetrics.cpp
+    src/Game.cpp
     src/Image.cpp
     src/main.cpp
     src/Mesh.cpp
@@ -23,20 +25,24 @@ set(CASINO_SOURCES
     src/Shader.cpp
     src/ShaderManager.cpp
     src/Sprite.cpp
+    src/SpriteManager.cpp
     src/Texture.cpp
     src/Wheel.cpp)
 
 set(CASINO_HEADERS
     src/Application.h
+    src/Button.h
     src/Camera.h
     src/Forward.h
     src/FPSMetrics.h
+    src/Game.h
     src/Image.h
     src/Mesh.h
     src/Renderer.h
     src/Shader.h
     src/ShaderManager.h
     src/Sprite.h
+    src/SpriteManager.h
     src/Texture.h
     src/Wheel.h)
 
