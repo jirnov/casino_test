@@ -2,15 +2,9 @@
 
 #include "Forward.h"
 
-enum class MouseButton : int {
-    Unknown = 0,
-    Left = GLUT_LEFT_BUTTON,
-    Right = GLUT_RIGHT_BUTTON,
-    Middle = GLUT_MIDDLE_BUTTON
-};
-enum class MouseState : int { Unknown = 0, Up = GLUT_UP, Down = GLUT_DOWN };
-
-enum class KeyCode : int { Unknown = 0, Escape = 27, Space = 32 };
+enum class MouseButton : int { Unknown = 0, Left, Right, Middle };
+enum class MouseState : int { Unknown = 0, Up, Down };
+enum class KeyCode : int { Unknown = 0, Escape, Space };
 
 struct IMouseListener {
     virtual ~IMouseListener() = default;
@@ -46,7 +40,7 @@ public:
     void setKeyboardListener(IKeyboardListener* listener);
     void setDisplayListener(IDisplayListener* listener);
     void setTimeListener(ITimerListener* listener);
-    void setReshapeListner(IReshapeListener* listener);
+    void setReshapeListener(IReshapeListener* listener);
 
 private:
     void displayFunc();
