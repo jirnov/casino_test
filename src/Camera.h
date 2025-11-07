@@ -5,6 +5,8 @@
 
 class Camera {
 public:
+    Camera(const glm::ivec2& size);
+
     void setWindowSize(const glm::ivec2& size);
 
     const glm::mat4& getProjectionMatrix() const;

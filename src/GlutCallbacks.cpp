@@ -43,8 +43,10 @@ MouseState toMouseState(int state)
 }
 } // namespace
 
-GlutCallbacks::GlutCallbacks(int fps)
+GlutCallbacks::GlutCallbacks(EventListener* listener, int fps)
    : m_prevInstance{instance}
+   , m_listener{listener}
+   , m_prevTime{Milliseconds(glutGet(GLUT_ELAPSED_TIME))}
 {
     instance = this;
 
@@ -93,57 +95,32 @@ GlutCallbacks::~GlutCallbacks()
     glutDisplayFunc(nullptr);
 }
 
-void GlutCallbacks::setMouseListener(IMouseListener* listener)
-{
-    m_mouseListener = listener;
-}
-
-void GlutCallbacks::setKeyboardListener(IKeyboardListener* listener)
-{
-    m_keyboardListener = listener;
-}
-
-void GlutCallbacks::setDisplayListener(IDisplayListener* listener)
-{
-    m_displayListener = listener;
-}
-
-void GlutCallbacks::setTimeListener(ITimerListener* listener)
-{
-    m_timerListener = listener;
-}
-
-void GlutCallbacks::setReshapeListener(IReshapeListener* listener)
-{
-    m_reshapeListener = listener;
-}
-
 void GlutCallbacks::displayFunc()
 {
-    if (m_displayListener) {
-        m_displayListener->onRender();
+    if (m_listener) {
+        m_listener->onEvent(DisplayEvent{});
     }
     glutSwapBuffers();
 }
 
 void GlutCallbacks::reshapeFunc(int w, int h)
 {
-    if (m_reshapeListener) {
-        m_reshapeListener->onReshape(glm::uvec2{w, h});
+    if (m_listener) {
+        m_listener->onEvent(ReshapeEvent(glm::uvec2{w, h}));
     }
 }
 
 void GlutCallbacks::mouseFunc(int button, int state, int x, int y)
 {
-    if (m_mouseListener) {
-        m_mouseListener->onMouse(toMouseButton(button), toMouseState(state), {x, y});
+    if (m_listener) {
+        m_listener->onEvent(MouseEvent(toMouseButton(button), toMouseState(state), {x, y}));
     }
 }
 
 void GlutCallbacks::keyboardFunc(unsigned char key)
 {
-    if (m_keyboardListener) {
-        m_keyboardListener->onKeyboard(toKeycode(key));
+    if (m_listener) {
+        m_listener->onEvent(KeyboardEvent(toKeycode(key)));
     }
 }
 
@@ -153,8 +130,8 @@ void GlutCallbacks::timerFunc(int fps)
     auto dt = curTime - m_prevTime;
     m_prevTime = curTime;
 
-    if (m_timerListener) {
-        m_timerListener->onTimer(dt);
+    if (m_listener) {
+        m_listener->onEvent(TimerEvent(dt));
     }
 
     glutTimerFunc(

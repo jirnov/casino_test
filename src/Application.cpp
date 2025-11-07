@@ -9,13 +9,12 @@ constexpr glm::uvec2 DEFAULT_WINDOW_SIZE{800, 600};
 }
 
 Application::Application(int argc, char** argv)
-   : m_camera{std::make_shared<Camera>()}
+   : m_camera{std::make_shared<Camera>(DEFAULT_WINDOW_SIZE)}
    , m_metrics{std::make_unique<FPSMetrics>()}
 {
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);
     glutInitWindowSize(DEFAULT_WINDOW_SIZE.x, DEFAULT_WINDOW_SIZE.y);
-    m_camera->setWindowSize(DEFAULT_WINDOW_SIZE);
     glutCreateWindow("CasinoTest. SPACE - run wheels, ESC - exit program");
 
     if (glewInit() != GLEW_OK) {
@@ -41,39 +40,11 @@ Application::Application(int argc, char** argv)
 
     m_game = std::make_unique<Game>(*m_spriteMgr);
 
-    m_glutCallbacks = std::make_unique<GlutCallbacks>();
-    m_glutCallbacks->setDisplayListener(this);
-    m_glutCallbacks->setKeyboardListener(this);
-    m_glutCallbacks->setMouseListener(m_game.get());
-    m_glutCallbacks->setReshapeListner(this);
-    m_glutCallbacks->setTimeListener(this);
+    m_glutCallbacks = std::make_unique<GlutCallbacks>(this);
 }
 
 Application::~Application()
 {}
-
-void Application::onKeyboard(KeyCode code)
-{
-    switch (code) {
-        case KeyCode::Escape:
-            glutLeaveMainLoop();
-            break;
-        default:
-            m_game->onKeyboard(code);
-            break;
-    }
-}
-
-void Application::onReshape(const glm::uvec2& windowSize)
-{
-    if (windowSize != DEFAULT_WINDOW_SIZE) {
-        glutReshapeWindow(DEFAULT_WINDOW_SIZE.x, DEFAULT_WINDOW_SIZE.y);
-
-    } else {
-        m_camera->setWindowSize(windowSize);
-        glViewport(0, 0, windowSize.x, windowSize.y);
-    }
-}
 
 int Application::run()
 {
@@ -81,16 +52,37 @@ int Application::run()
     return 0;
 }
 
-void Application::onTimer(const Milliseconds& dt)
+void Application::onMouseEvent(const MouseEvent& event)
 {
-    m_game->update(dt);
-
-    m_metrics->update(dt);
+    m_game->onMouseEvent(event);
 }
 
-void Application::onRender()
+void Application::onKeyboardEvent(const KeyboardEvent& event)
 {
-    glClearColor(1, 0, 0, 0);
+    switch (event.code) {
+        case KeyCode::Escape:
+            glutLeaveMainLoop();
+            break;
+        default:
+            m_game->onKeyboardEvent(event);
+            break;
+    }
+}
+
+void Application::onReshapeEvent(const ReshapeEvent& event)
+{
+    if (event.windowSize != DEFAULT_WINDOW_SIZE) {
+        glutReshapeWindow(DEFAULT_WINDOW_SIZE.x, DEFAULT_WINDOW_SIZE.y);
+
+    } else {
+        m_camera->setWindowSize(event.windowSize);
+        glViewport(0, 0, event.windowSize.x, event.windowSize.y);
+    }
+}
+
+void Application::onDisplayEvent(const DisplayEvent& event)
+{
+    glClearColor(0, 0, 0, 0);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     glDisable(GL_CULL_FACE);
@@ -98,4 +90,10 @@ void Application::onRender()
     m_game->render(*m_camera);
 
     m_metrics->render();
+}
+
+void Application::onTimerEvent(const TimerEvent& event)
+{
+    m_game->update(event.deltaTime);
+    m_metrics->update(event.deltaTime);
 }

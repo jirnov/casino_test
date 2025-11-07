@@ -3,7 +3,7 @@
 #include "Forward.h"
 #include "GlutCallbacks.h"
 
-class Application : ITimerListener, IDisplayListener, IReshapeListener, IKeyboardListener {
+class Application : public EventListener {
 public:
     Application(int argc, char** argv);
     ~Application();
@@ -11,10 +11,11 @@ public:
     int run();
 
 private:
-    void onTimer(const Milliseconds& dt) override;
-    void onRender() override;
-    void onReshape(const glm::uvec2& windowSize) override;
-    void onKeyboard(KeyCode keyCode) override;
+    void onMouseEvent(const MouseEvent& event) override;
+    void onKeyboardEvent(const KeyboardEvent& event) override;
+    void onReshapeEvent(const ReshapeEvent& event) override;
+    void onDisplayEvent(const DisplayEvent& event) override;
+    void onTimerEvent(const TimerEvent& event) override;
 
     GlutCallbacksUPtr m_glutCallbacks;
 

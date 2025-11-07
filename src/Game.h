@@ -3,7 +3,7 @@
 #include "Forward.h"
 #include "GlutCallbacks.h"
 
-class Game : public IMouseListener, public IKeyboardListener {
+class Game : EventListener {
 public:
     Game(const SpriteManager& spriteMgr);
     ~Game();
@@ -11,11 +11,10 @@ public:
     void update(const Milliseconds& dt);
     void render(const Camera& camera);
 
-    void onKeyboard(KeyCode code) override;
+    void onKeyboardEvent(const KeyboardEvent& event) override;
+    void onMouseEvent(const MouseEvent& event) override;
 
 private:
-    void onMouse(MouseButton button, MouseState state, const glm::ivec2 &pos) override;
-
     void startSpin();
 
     SpriteUPtr m_foreground;
