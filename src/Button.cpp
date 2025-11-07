@@ -1,18 +1,28 @@
 ﻿#include "Button.h"
 #include "Sprite.h"
 #include "SpriteManager.h"
+#include <algorithm>
 #include <glm/gtx/string_cast.hpp>
 
 namespace {
 constexpr glm::ivec2 BUTTON_LEFT_TOP{320, 520};
 constexpr glm::ivec2 BUTTON_RIGHT_BOTTOM{480, 580};
+constexpr glm::vec2 LABEL_POSITION{800 / 2 - 128 / 2, 600 - 80};
+constexpr glm::vec3 RED_COLOR{1, 0, 0};
+constexpr glm::vec3 GREEN_COLOR{0, 1, 0};
+
+template<typename T>
+T lerp(const T& a, const T& b, float t)
+{
+    return glm::mix(a, b, std::clamp(t, 0.0f, 1.0f));
+}
 } // namespace
 
 Button::Button(const SpriteManager& spriteMgr)
 {
     m_label = spriteMgr.createSprite("label");
-    m_label->setColor(glm::vec3{0, 1, 0});
-    m_label->setPosition(glm::vec2{800 / 2 - 128 / 2, 600 - 80});
+    m_label->setColor(GREEN_COLOR);
+    m_label->setPosition(LABEL_POSITION);
 }
 
 void Button::update(const Milliseconds& dt)
@@ -26,10 +36,7 @@ void Button::update(const Milliseconds& dt)
         m_labelSpeed = -m_labelSpeed;
     }
 
-    const auto colorA = glm::vec3{1, 0, 0};
-    const auto colorB = glm::vec3{0, 1, 0};
-
-    m_label->setColor(colorA + (colorB - colorA) * m_labelAnim);
+    m_label->setColor(lerp(RED_COLOR, GREEN_COLOR, m_labelAnim));
 }
 
 void Button::render(const Camera& camera)
@@ -39,8 +46,8 @@ void Button::render(const Camera& camera)
 
 bool Button::over(const glm::ivec2& p) const
 {
-    const auto lt = BUTTON_LEFT_TOP;
-    const auto rb = BUTTON_RIGHT_BOTTOM;
+    const auto& lt = BUTTON_LEFT_TOP;
+    const auto& rb = BUTTON_RIGHT_BOTTOM;
 
     return (p.x >= lt.x && p.x <= rb.x && p.y >= lt.y && p.y <= rb.y);
 }
