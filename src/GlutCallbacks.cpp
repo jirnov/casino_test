@@ -7,9 +7,10 @@ static GlutCallbacks* instance;
 KeyCode toKeycode(unsigned char code)
 {
     switch (code) {
-        case static_cast<unsigned char>(KeyCode::Escape):
-        case static_cast<unsigned char>(KeyCode::Space):
-            return static_cast<KeyCode>(code);
+        case 27:
+            return KeyCode::Escape;
+        case 32:
+            return KeyCode::Space;
         default:
             return KeyCode::Unknown;
     }
@@ -112,7 +113,7 @@ void GlutCallbacks::setTimeListener(ITimerListener* listener)
     m_timerListener = listener;
 }
 
-void GlutCallbacks::setReshapeListner(IReshapeListener* listener)
+void GlutCallbacks::setReshapeListener(IReshapeListener* listener)
 {
     m_reshapeListener = listener;
 }

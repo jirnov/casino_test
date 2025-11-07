@@ -18,8 +18,7 @@ Sprite::Sprite(TexturePtr texture, MeshPtr mesh, ShaderPtr shader)
 }
 
 Sprite::~Sprite()
-{
-}
+{}
 
 void Sprite::render(const Camera& camera)
 {
@@ -37,7 +36,6 @@ void Sprite::render(const Camera& camera)
 
     m_mesh->render();
 
-    //glDisable(GL_TEXTURE_2D);
     glBindTexture(GL_TEXTURE_2D, 0);
 }
 

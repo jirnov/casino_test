@@ -19,8 +19,8 @@ T lerp(const T& a, const T& b, float t)
 } // namespace
 
 Button::Button(const SpriteManager& spriteMgr)
+   : m_label{spriteMgr.createSprite("label")}
 {
-    m_label = spriteMgr.createSprite("label");
     m_label->setColor(GREEN_COLOR);
     m_label->setPosition(LABEL_POSITION);
 }
