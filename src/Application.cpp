@@ -3,23 +3,20 @@
 #include "FPSMetrics.h"
 #include "Game.h"
 #include "SpriteManager.h"
-//#include <format>
 
-constexpr int WINDOW_WIDTH = 800;
-constexpr int WINDOW_HEIGHT = 600;
-
-Application* Application::m_instance = nullptr;
+namespace {
+constexpr glm::uvec2 DEFAULT_WINDOW_SIZE{800, 600};
+}
 
 Application::Application(int argc, char** argv)
-   : m_prevInstance(m_instance)
-   , m_camera{std::make_shared<Camera>()}
+   : m_camera{std::make_shared<Camera>()}
    , m_metrics{std::make_unique<FPSMetrics>()}
 {
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);
-    glutInitWindowSize(800, 600);
-    m_camera->setWindowSize(glm::ivec2(WINDOW_WIDTH, WINDOW_HEIGHT));
-    m_winId = glutCreateWindow("CasinoTest");
+    glutInitWindowSize(DEFAULT_WINDOW_SIZE.x, DEFAULT_WINDOW_SIZE.y);
+    m_camera->setWindowSize(DEFAULT_WINDOW_SIZE);
+    glutCreateWindow("CasinoTest. SPACE - run wheels, ESC - exit program");
 
     if (glewInit() != GLEW_OK) {
         throw std::runtime_error("Failed to call glewInit");
@@ -44,15 +41,54 @@ Application::Application(int argc, char** argv)
 
     m_game = std::make_unique<Game>(*m_spriteMgr);
 
-    registerCallbacks();
+    m_glutCallbacks = std::make_unique<GlutCallbacks>();
+    m_glutCallbacks->setDisplayListener(this);
+    m_glutCallbacks->setKeyboardListener(this);
+    m_glutCallbacks->setMouseListener(m_game.get());
+    m_glutCallbacks->setReshapeListner(this);
+    m_glutCallbacks->setTimeListener(this);
 }
 
 Application::~Application()
+{}
+
+void Application::onKeyboard(KeyCode code)
 {
-    unregisterCallbasks();
+    switch (code) {
+        case KeyCode::Escape:
+            glutLeaveMainLoop();
+            break;
+        default:
+            m_game->onKeyboard(code);
+            break;
+    }
 }
 
-void Application::render()
+void Application::onReshape(const glm::uvec2& windowSize)
+{
+    if (windowSize != DEFAULT_WINDOW_SIZE) {
+        glutReshapeWindow(DEFAULT_WINDOW_SIZE.x, DEFAULT_WINDOW_SIZE.y);
+
+    } else {
+        m_camera->setWindowSize(windowSize);
+        glViewport(0, 0, windowSize.x, windowSize.y);
+    }
+}
+
+int Application::run()
+{
+    glutMainLoop();
+    return 0;
+}
+
+void Application::onTimer(const Milliseconds& dt)
+{
+    m_game->update(dt);
+
+    m_metrics->update(dt);
+}
+
+void Application::onRender()
 {
     glClearColor(1, 0, 0, 0);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -62,102 +98,4 @@ void Application::render()
     m_game->render(*m_camera);
 
     m_metrics->render();
-
-    glutSwapBuffers();
-}
-
-void Application::update()
-{
-    auto curTime = Milliseconds{glutGet(GLUT_ELAPSED_TIME)};
-    auto dt = curTime - m_prevTime;
-    m_prevTime = curTime;
-
-    m_game->update(dt);
-
-    m_metrics->update(dt);
-
-    glutPostRedisplay();
-}
-
-void Application::onKeyboard(unsigned char key)
-{
-    switch (key) {
-        case 27:
-            glutLeaveMainLoop();
-            break;
-        default:
-            m_game->onKeyboard(key);
-            break;
-    }
-}
-
-void Application::onMouse(int button, int state, int x, int y)
-{
-    m_game->onMouse(button, state, x, y);
-}
-
-void Application::timerFunc(int fps)
-{
-    if (m_instance) {
-        m_instance->update();
-    }
-    glutTimerFunc(1000 / fps, timerFunc, fps);
-}
-
-void Application::setWindowSize(int w, int h)
-{
-    m_camera->setWindowSize(glm::ivec2(w, h));
-    glViewport(0, 0, w, h);
-}
-
-int Application::run()
-{
-    glutMainLoop();
-    return 0;
-}
-
-void Application::registerCallbacks()
-{
-    m_prevInstance = m_instance;
-    m_instance = this;
-
-    glutDisplayFunc([]() {
-        if (m_instance) {
-            m_instance->render();
-        }
-    });
-
-    glutReshapeFunc([](int w, int h) {
-        if (w != WINDOW_WIDTH || h != WINDOW_HEIGHT) {
-            glutReshapeWindow(WINDOW_WIDTH, WINDOW_HEIGHT);
-        }
-        if (m_instance) {
-            m_instance->setWindowSize(w, h);
-        }
-    });
-
-    glutTimerFunc(1, &Application::timerFunc, 1000);
-
-    glutKeyboardFunc([](unsigned char key, int, int) {
-        if (m_instance) {
-            m_instance->onKeyboard(key);
-        }
-    });
-
-    glutMouseFunc([](int button, int state, int x, int y) {
-        if (m_instance) {
-            m_instance->onMouse(button, state, x, y);
-        }
-    });
-}
-
-void Application::unregisterCallbasks()
-{
-    m_instance = m_prevInstance;
-
-    glutDisplayFunc([]() {});
-    glutReshapeFunc(nullptr);
-    glutTimerFunc(0, nullptr, 0);
-    glutKeyboardFunc(nullptr);
-    glutMouseFunc(nullptr);
 }

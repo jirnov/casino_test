@@ -18,6 +18,7 @@ class Button;
 class Camera;
 class FPSMetrics;
 class Game;
+class GlutCallbacks;
 class Image;
 class Mesh;
 class Renderer;
@@ -54,3 +55,5 @@ using GameUPtr = std::unique_ptr<Game>;
 using ButtonUPtr = std::unique_ptr<Button>;
 
 using SpriteManagerUPtr = std::unique_ptr<SpriteManager>;
+
+using GlutCallbacksUPtr = std::unique_ptr<GlutCallbacks>;

@@ -9,7 +9,7 @@ public:
     void update(const Milliseconds& dt);
     void render(const Camera& camera);
 
-    bool clicked(int button, int state, int x, int y) const;
+    bool over(const glm::ivec2&) const;
 
 private:
     SpriteUPtr m_label;

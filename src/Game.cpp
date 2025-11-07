@@ -52,16 +52,18 @@ void Game::update(const Milliseconds& dt)
     m_button->update(dt);
 }
 
-void Game::onKeyboard(unsigned char key)
+void Game::onKeyboard(KeyCode code)
 {
-    if (key == 32) {
+    if (code == KeyCode::Space) {
         startSpin();
     }
 }
 
-void Game::onMouse(int button, int state, int x, int y)
+void Game::onMouse(MouseButton button, MouseState state, const glm::ivec2& pos)
 {
-    if (m_button->clicked(button, state, x, y)) {
-        startSpin();
+    if (button == MouseButton::Left && state == MouseState::Up) {
+        if (m_button->over(pos)) {
+            startSpin();
+        }
     }
 }

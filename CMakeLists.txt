@@ -18,6 +18,7 @@ set(CASINO_SOURCES
     src/Camera.cpp
     src/FPSMetrics.cpp
     src/Game.cpp
+    src/GlutCallbacks.cpp
     src/Image.cpp
     src/main.cpp
     src/Mesh.cpp
@@ -36,6 +37,7 @@ set(CASINO_HEADERS
     src/Forward.h
     src/FPSMetrics.h
     src/Game.h
+    src/GlutCallbacks.h
     src/Image.h
     src/Mesh.h
     src/Renderer.h
@@ -49,10 +51,11 @@ set(CASINO_HEADERS
 add_executable(${PROJECT_NAME} ${CASINO_HEADERS} ${CASINO_SOURCES})
 
 if (MSVC)
+    set(CMAKE_CXX_FLAGS_RELEASE "/MT")
+    set(CMAKE_CXX_FLAGS_DEBUG "/MTd")
     target_compile_definitions(${PROJECT_NAME} PRIVATE STB_IMAGE_IMPLEMENTATION GLM_ENABLE_EXPERIMENTAL)
-#    target_compile_definitions(${PROJECT_NAME} PRIVATE /W4 / WX)
     target_link_libraries(${PROJECT_NAME} freeglut glew OpenGL::GL stb glm)
 else()
-	target_compile_definitions(${PROJECT_NAME} PRIVATE STB_IMAGE_IMPLEMENTATION GLM_ENABLE_EXPERIMENTAL)
-	target_link_libraries(${PROJECT_NAME} glut ${GLEW_LIBRARIES} OpenGL::GL stb glm)
+    target_compile_definitions(${PROJECT_NAME} PRIVATE STB_IMAGE_IMPLEMENTATION GLM_ENABLE_EXPERIMENTAL)
+    target_link_libraries(${PROJECT_NAME} glut ${GLEW_LIBRARIES} OpenGL::GL stb glm)
 endif()

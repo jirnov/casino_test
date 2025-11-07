@@ -1,8 +1,9 @@
 ﻿#pragma once
 
 #include "Forward.h"
+#include "GlutCallbacks.h"
 
-class Game {
+class Game : public IMouseListener, public IKeyboardListener {
 public:
     Game(const SpriteManager& spriteMgr);
     ~Game();
@@ -10,10 +11,11 @@ public:
     void update(const Milliseconds& dt);
     void render(const Camera& camera);
 
-    void onMouse(int button, int state, int x, int y);
-    void onKeyboard(unsigned char key);
+    void onKeyboard(KeyCode code) override;
 
 private:
+    void onMouse(MouseButton button, MouseState state, const glm::ivec2 &pos) override;
+
     void startSpin();
 
     SpriteUPtr m_foreground;

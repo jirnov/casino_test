@@ -4,8 +4,8 @@
 #include <glm/gtx/string_cast.hpp>
 
 namespace {
-constexpr glm::uvec2 BUTTON_LEFT_TOP{320, 520};
-constexpr glm::uvec2 BUTTON_RIGHT_BOTTOM{480, 580};
+constexpr glm::ivec2 BUTTON_LEFT_TOP{320, 520};
+constexpr glm::ivec2 BUTTON_RIGHT_BOTTOM{480, 580};
 } // namespace
 
 Button::Button(const SpriteManager& spriteMgr)
@@ -37,18 +37,10 @@ void Button::render(const Camera& camera)
     m_label->render(camera);
 }
 
-bool Button::clicked(int button, int state, int x, int y) const
+bool Button::over(const glm::ivec2& p) const
 {
-    if (button != GLUT_LEFT_BUTTON) {
-        return false;
-    }
-
-    if (state != GLUT_UP) {
-        return false;
-    }
-
     const auto lt = BUTTON_LEFT_TOP;
     const auto rb = BUTTON_RIGHT_BOTTOM;
 
-    return (x >= lt.x && x <= rb.x && y >= lt.y && y <= rb.y);
+    return (p.x >= lt.x && p.x <= rb.x && p.y >= lt.y && p.y <= rb.y);
 }
