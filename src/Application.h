@@ -17,8 +17,6 @@ private:
     void onDisplayEvent(const DisplayEvent& event) override;
     void onTimerEvent(const TimerEvent& event) override;
 
-    GlutCallbacksUPtr m_glutCallbacks;
-
     SpriteManagerUPtr m_spriteMgr;
     CameraPtr m_camera;
     FPSMetricsUPtr m_metrics;
@@ -26,4 +24,6 @@ private:
     Milliseconds m_prevTime{Milliseconds::zero()};
 
     GameUPtr m_game;
+
+    GlutCallbacksUPtr m_glutCallbacks;
 };
