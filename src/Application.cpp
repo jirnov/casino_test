@@ -40,7 +40,7 @@ Application::Application(int argc, char** argv)
 
     m_game = std::make_unique<Game>(*m_spriteMgr);
 
-    m_glutCallbacks = std::make_unique<GlutCallbacks>(this);
+    m_glutCallbacks = std::make_unique<GlutCallbacks>(*this);
 }
 
 Application::~Application()

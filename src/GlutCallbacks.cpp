@@ -2,7 +2,6 @@
 #include <cassert>
 
 namespace {
-static GlutCallbacks* instance;
 
 KeyCode toKeycode(unsigned char code)
 {
@@ -43,32 +42,35 @@ MouseState toMouseState(int state)
 }
 } // namespace
 
-GlutCallbacks::GlutCallbacks(EventListener* listener, int fps)
-   : m_prevInstance{instance}
-   , m_listener{listener}
+GlutCallbacks::GlutCallbacks(EventListener& listener, int fps)
+   : m_listener{&listener}
    , m_prevTime{Milliseconds(glutGet(GLUT_ELAPSED_TIME))}
 {
-    instance = this;
+    glutSetWindowData(this);
 
     glutDisplayFunc([]() {
+        auto instance = static_cast<GlutCallbacks*>(glutGetWindowData());
         if (instance) {
             instance->displayFunc();
         }
     });
 
     glutReshapeFunc([](int w, int h) {
+        auto instance = static_cast<GlutCallbacks*>(glutGetWindowData());
         if (instance) {
             instance->reshapeFunc(w, h);
         }
     });
 
     glutMouseFunc([](int button, int state, int x, int y) {
+        auto instance = static_cast<GlutCallbacks*>(glutGetWindowData());
         if (instance) {
             instance->mouseFunc(button, state, x, y);
         }
     });
 
     glutKeyboardFunc([](unsigned char key, int, int) {
+        auto instance = static_cast<GlutCallbacks*>(glutGetWindowData());
         if (instance) {
             instance->keyboardFunc(key);
         }
@@ -77,6 +79,7 @@ GlutCallbacks::GlutCallbacks(EventListener* listener, int fps)
     glutTimerFunc(
        1,
        [](int value) {
+           auto instance = static_cast<GlutCallbacks*>(glutGetWindowData());
            if (instance) {
                instance->timerFunc(value);
            }
@@ -86,7 +89,7 @@ GlutCallbacks::GlutCallbacks(EventListener* listener, int fps)
 
 GlutCallbacks::~GlutCallbacks()
 {
-    instance = m_prevInstance;
+    glutSetWindowData(nullptr);
 
     glutTimerFunc(0, nullptr, 0);
     glutKeyboardFunc(nullptr);
@@ -137,6 +140,7 @@ void GlutCallbacks::timerFunc(int fps)
     glutTimerFunc(
        1000 / fps,
        [](int value) {
+           auto instance = reinterpret_cast<GlutCallbacks*>(glutGetWindowData());
            if (instance) {
                instance->timerFunc(value);
            }

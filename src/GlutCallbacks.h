@@ -133,7 +133,7 @@ protected:
 
 class GlutCallbacks {
 public:
-    GlutCallbacks(EventListener* listener, int fps = 1000);
+    GlutCallbacks(EventListener& listener, int fps = 1000);
     ~GlutCallbacks();
 
 private:
@@ -143,7 +143,6 @@ private:
     void mouseFunc(int button, int state, int x, int y);
     void keyboardFunc(unsigned char key);
 
-    GlutCallbacks* m_prevInstance{nullptr};
     EventListener* m_listener{nullptr};
 
     Milliseconds m_prevTime;
